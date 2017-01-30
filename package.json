@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/tmaxwellmt/Fullstack-Bears/issues"
   },
-  "homepage": "https://github.com/tmaxwellmt/Fullstack-Bears#readme"
+  "homepage": "https://github.com/tmaxwellmt/Fullstack-Bears#readme",
+  "dependencies": {
+    "express": "^4.14.1"
+  }
 }

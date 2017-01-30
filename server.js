@@ -1,6 +1,12 @@
-var http = require('http');
-http.createServer(function(req, res) {
-res.send("Hello World");
-}).listen(3000);
+var express = require('express');
+var app = express();
 
-console.log("Server is up and running")
+app.get ('/api/greeting', function(req,res){
+  res.send("Happy Monday");
+});
+app.get(/api/happy',function(req,res) {
+  res.send("Happy");
+
+app.listen(3000, function(){
+  console.log("Express application fired up on port 3000")
+});
