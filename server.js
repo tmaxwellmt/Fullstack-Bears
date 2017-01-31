@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 var Bear = require('./models/bear');
+var moment = require('moment');
 
 var bodyParser = require('body-parser');
 
@@ -9,6 +10,25 @@ mongoose.connect("mongodb://localhost/fullstack-bears");
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+app.use(express.static('public'));
+
+app.set('view engine', 'ejs');
+
+app.get('/', function (req, res){
+  var date = moment();
+  res.render('index', {name: "Tyler", date: date.format
+  ('MMMM Do YYYY, h:mm:ss a')});
+});
+app.get('/bears', function(req, res){
+  Bear.find(function(err, data) {
+    if (err) {
+      console.log(err, "ERROR FINDING BEAR")
+    } else {
+      res.render('bears', {bears: data});
+    }
+  });
+});
 
 app.get('/api/bears', function(req, res){
   Bear.find(function(err, bearData) {
