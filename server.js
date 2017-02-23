@@ -8,12 +8,23 @@ var bodyParser = require('body-parser');
 
 mongoose.connect("mongodb://localhost/fullstack-bears");
 
+//makes post method work, mounting middleware
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+//app.use - access to public folder
 app.use(express.static('public'));
 
 app.set('view engine', 'ejs');
+
+//require routes to each file in
+var indexRoute = require('./routes/index');
+
+var bearsRoute = require('./routes/bears');
+
+app.get('/about', function (req, res) {
+  res.send('about');
+});
 
 app.get('/', function (req, res){
   var date = moment();
@@ -40,35 +51,35 @@ app.get('/api/bears', function(req, res){
   })
 });
 
-app.post('/api/bears', function(req, res){
+// app.post('/api/bears', function(req, res){
+//
+//   var bear = new Bear({
+//     age: req.body.age,
+//     species: req.body.species,
+//     name: req.body.name,
+//     weight: req.body.weight,
+//     location: req.body.location,
+//     attitude: req.body.attitude,
+  // });
+  //
+  // bear.save(function(err, bearData){
+  //   if(err){
+  //     console.log(err, "Error with your bearer");
+  //   } else {
+  //     res.json(bearData)
+  //   }
+  // });
+//});
 
-  var bear = new Bear({
-    age: req.body.age,
-    species: req.body.species,
-    name: req.body.name,
-    weight: req.body.weight,
-    location: req.body.location,
-    attitude: req.body.attitude,
-  });
-
-  bear.save(function(err, bearData){
-    if(err){
-      console.log(err, "Error with your bearer");
-    } else {
-      res.json(bearData)
-    }
-  });
-});
-
-app.get ('/api/bears/:bear_id', function(req, res){
-  Bear.findById(req.params.bear_id, function(err, bearData) {
-    if(err){
-      console.log(err, "Error with one specific Bear");
-    }else{
-      res.json(bearData);
-    }
-  });
-});
+// app.get ('/api/bears/:bear_id', function(req, res){
+//   Bear.findById(req.params.bear_id, function(err, bearData) {
+//     if(err){
+//       console.log(err, "Error with one specific Bear");
+//     }else{
+//       res.json(bearData);
+//     }
+//   });
+// });
 
 app.put('/api/bears/:bear_id', function(req, res) {
   Bear.findById( req.params.bear_id, function(err, bear) {
@@ -79,7 +90,7 @@ app.put('/api/bears/:bear_id', function(req, res) {
       bear.age = req.body.age ? req.body.age : bear.age;
       bear.species = req.body.species ? req.body.species : bear.species;
       bear.attitude = req.body.attitude ? req.body.attitude : bear.attitude;
-      bear.color = req.body.color ? req.body.color : bear.color;
+      bear. color= req.body.color ? req.body.color : bear.color;
       bear.weight = req.body.weight ? req.body.weight : bear.weight;
       bear.location = req.body.location ? req.body.location : bear.location;
       bear.name = req.body.name ? req.body.name : bear.name;
@@ -105,6 +116,9 @@ app.delete('/api/bears/:bear_id', function(req, res) {
     }
   });
 });
+
+app.use('/', indexRoute);
+app.use('/api', bearsRoute);
 
 
 app.listen(3000, function(){
